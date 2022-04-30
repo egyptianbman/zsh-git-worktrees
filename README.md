@@ -1,13 +1,13 @@
 # zsh-git-worktrees
 
-A zsh plugin that makes git worktrees much more functional
+A zsh plugin that makes `git` worktrees much more functional
 
 ## Why?
 
 You're in the middle of working on something and someone asks you to change
 gears and work on something else. You can commit and switch to another branch
 or maybe stash and pop it later. Neither option is really ideal -- and this is
-why git worktrees exist. The only problem with git worktrees is there isn't a
+why `git` worktrees exist. The only problem with `git` worktrees is there isn't a
 great workflow that allows the power of worktrees to shine through.
 
 ## How should I use this?
@@ -64,7 +64,7 @@ $ gwt rm completed-feature
 Branch `main` is considered special as it holds your base repository. This
 means it can't be renamed or replaced.
 
-## Find a bug or want t contribute?
+## Find a bug or want to contribute?
 
 Hopefully you find this as helpful for you as it has been for me. Please feel
 free to submit any suggestions or updates you make!
