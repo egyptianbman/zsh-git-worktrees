@@ -1,0 +1,32 @@
+case ${1} in
+  |ls)
+    git worktree list
+    ;;
+  rm)
+    local removing="${2}"
+    local current=$(basename $(readlink -f "${PWD}"))
+
+    if [[ -z ${removing} ]]; then
+      echo "Can't find worktree to remove."
+      return -1
+    fi
+
+    if [[ "${current}" == "${removing}" ]]; then
+      __gwt_switch main
+    fi
+
+    git worktree remove "${2}"
+    git branch -d "${2}"
+    ;;
+  mv)
+    __gwt_mv "${2}" "${3}"
+    ;;
+  switch)
+    __gwt_switch "${2}"
+    ;;
+  *)
+    __gwt_switch "${1}"
+    ;;
+esac
+
+# vim: ft=zsh sw=2 ts=2 et

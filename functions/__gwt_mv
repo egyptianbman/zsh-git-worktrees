@@ -1,0 +1,18 @@
+local from=${1}
+local to=${2}
+
+if [[ -z ${2} ]]; then
+  from=$(basename $(/bin/pwd -P))
+  to=${1}
+fi
+
+if [[ ${from} == "main" || ${to} == "main" ]]; then
+  echo "Can't change main."
+  return -1
+fi
+
+git worktree move ../${from} ../${to}
+git branch -m ${to}
+__gwt_symlink ${to}
+
+# vim: ft=zsh sw=2 ts=2 et

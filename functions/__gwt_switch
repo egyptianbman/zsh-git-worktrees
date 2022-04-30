@@ -1,0 +1,23 @@
+local to=${1}
+local repo="$(basename $(git config remote.origin.url) | sed 's/.git//')" 2> /dev/null
+
+if [[ -z ${to} || -z ${repo} ]]; then
+  echo "Are you in a project?"
+  return -1
+fi
+
+if [[ ! -d "../${to}" ]]; then
+  if git branch | grep ${to}; then
+    git checkout ${to}
+    git checkout -
+  else
+    git checkout -b ${to}
+    git checkout -
+  fi
+
+  git worktree add "../${to}"
+fi
+
+__gwt_symlink ${to}
+
+# vim: ft=zsh sw=2 ts=2 et

@@ -1,0 +1,29 @@
+#compdef gwt
+
+__gwt_commands_and_branches() {
+  local -a branches
+  branches=$(git worktree list | awk '{ print $3 }' | sed -e 's/[[]//' -e 's/[]]//' | sort | uniq)
+  _describe 'options' '(ls\:"List current worktrees" switch\:"Switch to another worktree (creates if does not exist)" rm\:"Removes a worktree. If on current worktree, switches to main" '${branches}')'
+}
+
+__gwt_branches() {
+  if [[ $words[2] == 'ls' ]]; then
+    return
+  fi
+
+  local -a branches
+  branches=(${(f)"$(git worktree list | awk '{ print $3 }' | sed -e 's/[[]//' -e 's/[]]//' | sort | uniq)"})
+  _describe 'branch' branches
+}
+
+_gwt() {
+  local curcontext="$curcontext" ret=1
+
+  _arguments -s \
+    '1: :__gwt_commands_and_branches' \
+    '2: :__gwt_branches' && ret=0
+
+  return $ret
+}
+
+_gwt "$@"
