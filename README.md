@@ -38,6 +38,9 @@ name as your project -- thanks to the symlink that gwt handles for you. This
 helps with things like docker-compose, allowing you to switch between
 worktrees, all while tricking compose into thinking you're in one "project".
 
+## Demo
+![demo](https://github.com/egyptianbman/zsh-git-worktrees/raw/main/vhs.gif)
+
 ## Auto completion
 
 This plugin automatically loads auto completion. Feel free to hit tab after

@@ -1,0 +1,34 @@
+name: Update demo gif
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*.tape'
+  workflow_dispatch:
+
+jobs:
+  update-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install zsh
+        run: sudo apt-get install -qy zsh
+
+      - uses: charmbracelet/vhs-action@v1
+        with:
+          path: vhs.tape
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'chore: Update generated VHS GIF'
+          branch: main
+          commit_user_name: vhs-action 📼
+          commit_user_email: actions@github.com
+          commit_author: vhs-action 📼 <actions@github.com>
+          file_pattern: '*.gif'

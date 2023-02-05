@@ -10,7 +10,7 @@ cd "$repo"
 git branch --set-upstream-to "origin/$branch" 2> /dev/null
 
 if command -v tmux > /dev/null 2>&1; then
-  tmux set-environment -g PWD "$(dirname $PWD)/$repo"
+  tmux set-environment -g PWD "$(dirname $PWD)/$repo" > /dev/null 2>&1
 fi
 
 echo "Switched to \"$branch\" worktree"
