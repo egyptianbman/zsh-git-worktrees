@@ -1,23 +1,21 @@
-local to=${1}
+local to="$1"
+local dir="${to//\//-}"
 local repo="$(basename $(git config remote.origin.url) | sed 's/.git//')" 2> /dev/null
 
-if [[ -z ${to} || -z ${repo} ]]; then
+if [[ -z "$to" || -z "$repo" ]]; then
   echo "Are you in a project?"
   return -1
 fi
 
-if [[ ! -d "../${to}" ]]; then
-  if git branch | grep ${to}; then
-    git checkout ${to}
-    git checkout -
-  else
-    git checkout -b ${to}
-    git checkout -
+if [[ ! -d "../$dir" ]]; then
+  if ! git branch | grep "$to"; then
+    git checkout -b "$to" > /dev/null 2>&1
+    git checkout - > /dev/null 2>&1
   fi
 
-  git worktree add "../${to}"
+  git worktree add "../$dir" "$to"
 fi
 
-__gwt_symlink ${to}
+__gwt_symlink "$to" "$dir"
 
 # vim: ft=zsh sw=2 ts=2 et

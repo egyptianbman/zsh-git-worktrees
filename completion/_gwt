@@ -2,17 +2,21 @@
 
 __gwt_commands_and_branches() {
   local -a branches
-  branches=$(git worktree list | awk '{ print $3 }' | sed -e 's/[[]//' -e 's/[]]//' | sort | uniq)
+  branches="$(git branch -a | sed '/remotes\/origin\/HEAD\|^*/d' | sed 's/\+ \|.*remotes\/origin\///g' | sort | uniq)"
   _describe 'options' '(ls\:"List current worktrees" switch\:"Switch to another worktree (creates if does not exist)" rm\:"Removes a worktree. If on current worktree, switches to main" '${branches}')'
 }
 
 __gwt_branches() {
-  if [[ $words[2] == 'ls' ]]; then
+  if [[ $words[2] == "ls" ]]; then
     return
   fi
 
   local -a branches
-  branches=(${(f)"$(git worktree list | awk '{ print $3 }' | sed -e 's/[[]//' -e 's/[]]//' | sort | uniq)"})
+  if [[ $words[2] == "rm" ]]; then
+    branches=(${(f)"$(git worktree list | awk '{ print $3 }' | sed -e 's/[[]//' -e 's/[]]//' | sort | uniq)"})
+  else
+    branches=(${(f)"$(git branch -a | sed '/remotes\/origin\/HEAD\|^*/d' | sed 's/\+ \|.*remotes\/origin\///g' | sort | uniq)"})
+  fi
   _describe 'branch' branches
 }
 
@@ -23,7 +27,7 @@ _gwt() {
     '1: :__gwt_commands_and_branches' \
     '2: :__gwt_branches' && ret=0
 
-  return $ret
+  return "$ret"
 }
 
 _gwt "$@"

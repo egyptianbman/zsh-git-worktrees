@@ -1,18 +1,25 @@
-local from=${1}
-local to=${2}
+local from="$1"
+local to="$2"
 
-if [[ -z ${2} ]]; then
-  from=$(basename $(/bin/pwd -P))
-  to=${1}
+if [[ -z "$2" ]]; then
+  from="$(basename $(/bin/pwd -P))"
+  to="$1"
 fi
 
-if [[ ${from} == "main" || ${to} == "main" ]]; then
-  echo "Can't change main."
+local default_branch=main
+if [[ -f "$from/../.default-branch" ]]; then
+  default_branch="$(cat $from/../.default-branch)"
+fi
+
+local dir="${to//\//-}"
+
+if [[ "$from" == "$default_branch" || "$to" == "$default_branch" ]]; then
+  echo "Can't change $default_branch."
   return -1
 fi
 
-git worktree move ../${from} ../${to}
-git branch -m ${to}
-__gwt_symlink ${to}
+git worktree move "../$from" "../$dir"
+git branch -m "$to"
+__gwt_symlink "$to" "$dir"
 
 # vim: ft=zsh sw=2 ts=2 et

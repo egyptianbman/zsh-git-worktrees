@@ -1,31 +1,41 @@
-case ${1} in
+case "$1" in
   |ls)
     git worktree list
     ;;
   rm)
-    local removing="${2}"
-    local current=$(basename $(readlink -f "${PWD}"))
+    local basepath="$(readlink -f "$PWD")"
+    local removing_worktree="$2"
+    local removing_worktree_dashed="${removing_worktree//\//-}"
 
-    if [[ -z ${removing} ]]; then
-      echo "Can't find worktree to remove."
+    if [[ -z "$removing_worktree" ]]; then
+      echo "You must supply a worktree to remove."
       return -1
     fi
 
-    if [[ "${current}" == "${removing}" ]]; then
-      __gwt_switch main
+    local removing_dir="$(dirname $basepath)/$removing_worktree_dashed"
+    local current_dir="$(basename $basepath)"
+    current_dir="${current_dir//\//-}"
+
+    if [[ "$current_dir" == "$removing_worktree_dashed" ]]; then
+      local default_branch=main
+      if [[ -f "$basepath/../.default-branch" ]]; then
+        default_branch="$(cat "$basepath/../.default-branch")"
+      fi
+
+      __gwt_switch "$default_branch"
     fi
 
-    git worktree remove "${2}"
-    git branch -d "${2}"
+    git worktree remove "$removing_dir"
+    git branch -d "$2"
     ;;
   mv)
-    __gwt_mv "${2}" "${3}"
+    __gwt_mv "$2" "$3"
     ;;
   switch)
-    __gwt_switch "${2}"
+    __gwt_switch "$2"
     ;;
   *)
-    __gwt_switch "${1}"
+    __gwt_switch "$1"
     ;;
 esac
 
